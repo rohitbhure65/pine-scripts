@@ -1,0 +1,48 @@
+//@version=5
+indicator("EMA Dashboard with Input Fields", overlay=true)
+
+// Input fields for EMA lengths
+ema9_length = input.int(9, title="Length for EMA 9", minval=1)
+ema20_length = input.int(20, title="Length for EMA 20", minval=1)
+ema50_length = input.int(50, title="Length for EMA 50", minval=1)
+ema100_length = input.int(100, title="Length for EMA 100", minval=1)
+ema200_length = input.int(200, title="Length for EMA 200", minval=1)
+
+// Define EMAs
+ema9 = ta.ema(close, ema9_length)
+ema20 = ta.ema(close, ema20_length)
+ema50 = ta.ema(close, ema50_length)
+ema100 = ta.ema(close, ema100_length)
+ema200 = ta.ema(close, ema200_length)
+
+// Define trend conditions
+trend1 = ema9 > ema20 ? "Bullish" : "Bearish"
+trend2 = ema20 > ema50 ? "Bullish" : "Bearish"
+trend3 = ema50 > ema100 ? "Bullish" : "Bearish"
+trend4 = ema100 > ema200 ? "Bullish" : "Bearish"
+
+// Define colors for dashboard
+color1 = ema9 > ema20 ? color.green : color.red
+color2 = ema20 > ema50 ? color.green : color.red
+color3 = ema50 > ema100 ? color.green : color.red
+color4 = ema100 > ema200 ? color.green : color.red
+
+// Display EMAs on chart
+plot(ema9, title="9 EMA", color=color.rgb(50, 122, 180))
+plot(ema20, title="20 EMA", color=color.black)
+plot(ema50, title="50 EMA", color=color.rgb(94, 94, 94))
+plot(ema100, title="100 EMA", color=color.rgb(255, 165, 0))
+plot(ema200, title="200 EMA", color=color.rgb(81, 21, 92))
+
+// Create table
+var table dashboard = table.new(position=position.top_right, frame_color=color.black, border_color=color.black, columns=2, rows=4, border_width=1)
+
+// Update table values
+table.cell(dashboard, 0, 0, "9 > 20", text_color=color.white, bgcolor=color1)
+table.cell(dashboard, 1, 0, trend1, text_color=color.white, bgcolor=color1)
+table.cell(dashboard, 0, 1, "20 > 50", text_color=color.white, bgcolor=color2)
+table.cell(dashboard, 1, 1, trend2, text_color=color.white, bgcolor=color2)
+table.cell(dashboard, 0, 2, "50 > 100", text_color=color.white, bgcolor=color3)
+table.cell(dashboard, 1, 2, trend3, text_color=color.white, bgcolor=color3)
+table.cell(dashboard, 0, 3, "100 > 200", text_color=color.white, bgcolor=color4)
+table.cell(dashboard, 1, 3, trend4, text_color=color.white, bgcolor=color4)
